@@ -2,7 +2,6 @@ package com.rossie.E_Commerce.Product.Management.System.repository;
 
 import com.rossie.E_Commerce.Product.Management.System.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -18,7 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @param productId the product id
      * @return the optional
      */
-    @Query
     Optional<Product> findProductByProductId(Long productId);
 
     /**
@@ -27,7 +25,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @param productName the product name
      * @return the optional
      */
-    @Query
     Optional<Product> findProductByProductName(String productName);
 
 }
