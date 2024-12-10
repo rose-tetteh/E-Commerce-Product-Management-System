@@ -46,4 +46,7 @@ public class Product {
     @Column
     private LocalDateTime updateAt;
 
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Category.class)
+    private Category category;
+
 }
