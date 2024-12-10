@@ -17,12 +17,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The type Product service.
  */
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService,GenericService<ProductResponseDto, Long> {
     private final ProductRepository productRepository;
     private final ObjectMapper objectMapper;
 
@@ -38,19 +39,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponseDto> getAllProducts() {
+    public List<ProductResponseDto> getAll() {
         return objectMapper.convertValue(productRepository.findAll(), new TypeReference<>() {
         });
     }
 
     @Override
-    public ProductResponseDto getProductById(Long id) {
+    public ProductResponseDto getById(Long id) {
         Product product= productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Product with id " + id + "does not exist"));
         return objectMapper.convertValue(product, ProductResponseDto.class);
     }
 
     @Override
-    public ProductResponseDto addProduct(ProductDto productDto) {
+    public ProductResponseDto getByName(String name) {
+        Product product= productRepository.findProductByProductName(name).orElseThrow(() -> new EntityNotFoundException("Product with name " + name + "does not exist"));
+        return objectMapper.convertValue(product, ProductResponseDto.class);
+    }
+
+    @Override
+    public ProductResponseDto add(Object dto) {
+        ProductDto productDto = (ProductDto) dto;
         Optional<Product> productByName = productRepository.findProductByProductName(productDto.productName());
         if (productByName.isPresent()) {
             System.out.println("Product with name " + productDto.productName() + " already exists");
@@ -69,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Object deleteProductById(Long id) {
+    public Object deleteById(Long id) {
        boolean exists = productRepository.existsById(id);
        if (!exists) {
            throw new EntityNotFoundException("Product with id " + id + " does not exist");
@@ -79,8 +87,10 @@ public class ProductServiceImpl implements ProductService {
        return ResponseHandler.success(productRepository.findProductByProductId(id), "Product Deleted!", HttpStatus.OK);
     }
 
+
     @Override
-    public ProductResponseDto updateProductById(Long productId, ProductDto productDto) {
+    public ProductResponseDto updateById(Long productId, Object dot) {
+        ProductDto productDto = (ProductDto) dot;
         Product product = productRepository.findProductByProductId(productId).orElseThrow(() -> new EntityNotFoundException("Product with id " + productId + "does not exist"));
         if (productDto.productName() != null && !productDto.productName().isEmpty() &&
                 !Objects.equals(productDto.productName(), product.getProductName())) {
@@ -95,4 +105,9 @@ public class ProductServiceImpl implements ProductService {
         return objectMapper.convertValue(product, ProductResponseDto.class);
     }
 
+    @Override
+    public List<ProductResponseDto> getProductsByCategory(Long categoryId) {
+       Optional<Product> products = productRepository.findProductsByCategoryId(categoryId);
+        return objectMapper.convertValue(products, new TypeReference<>() {});
+    }
 }

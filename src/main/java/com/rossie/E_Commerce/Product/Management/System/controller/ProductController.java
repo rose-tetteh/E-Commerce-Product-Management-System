@@ -2,22 +2,26 @@ package com.rossie.E_Commerce.Product.Management.System.controller;
 
 import com.rossie.E_Commerce.Product.Management.System.dto.ProductDto;
 import com.rossie.E_Commerce.Product.Management.System.service.ProductService;
+import com.rossie.E_Commerce.Product.Management.System.service.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The type Product controller.
+ */
 @RestController
 @RequestMapping(path = "/api/")
 public class ProductController {
-    private final ProductService productService;
+    private final ProductServiceImpl productServiceImpl;
 
     /**
      * Instantiates a new Product controller.
      *
-     * @param productService the product service
+     * @param productServiceImpl the product service
      */
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductServiceImpl productServiceImpl) {
+        this.productServiceImpl = productServiceImpl;
     }
 
 
@@ -29,7 +33,7 @@ public class ProductController {
     @GetMapping("v1/products")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getAllProducts() {
-        return ResponseHandler.success(productService.getAllProducts(), "All Products", HttpStatus.OK);
+        return ResponseHandler.success(productServiceImpl.getAll(), "All Products", HttpStatus.OK);
     }
 
     /**
@@ -41,7 +45,7 @@ public class ProductController {
     @PostMapping("v1/addProduct")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) {
-        return ResponseHandler.success(productService.addProduct(productDto), "Product Added", HttpStatus.CREATED);
+        return ResponseHandler.success(productServiceImpl.add(productDto), "Product Added", HttpStatus.CREATED);
     }
 
     /**
@@ -53,7 +57,19 @@ public class ProductController {
     @GetMapping("v1/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getProductById(@PathVariable(value = "productId") Long productId) {
-        return ResponseHandler.success(productService.getProductById(productId), "Product Found", HttpStatus.OK);
+        return ResponseHandler.success(productServiceImpl.getById(productId), "Product Found", HttpStatus.OK);
+    }
+
+    /**
+     * Gets product by name.
+     *
+     * @param productName the product name
+     * @return the product by name
+     */
+    @GetMapping("v1/products/{productName}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Object> getProductByName(@PathVariable(value = "productName") String productName) {
+        return ResponseHandler.success(productServiceImpl.getByName(productName), "Product Found", HttpStatus.OK);
     }
 
     /**
@@ -65,7 +81,7 @@ public class ProductController {
     @DeleteMapping("v1/product/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "productId") Long productId) {
-        return ResponseHandler.success(productService.deleteProductById(productId), "Product Deleted", HttpStatus.OK);
+        return ResponseHandler.success(productServiceImpl.deleteById(productId), "Product Deleted", HttpStatus.OK);
     }
 
     /**
@@ -78,7 +94,21 @@ public class ProductController {
     @PutMapping("v1/project/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> updateProduct(@PathVariable("productId") Long productId,@RequestBody ProductDto productDto) {
-        return ResponseHandler.success(productService.updateProductById(productId, productDto), "Product Updated", HttpStatus.OK);
+        return ResponseHandler.success(productServiceImpl.updateById(productId, productDto), "Product Updated", HttpStatus.OK);
     }
+
+    /**
+     * Gets products by category id.
+     *
+     * @param categoryId the category id
+     * @return the products by category id
+     */
+    @GetMapping("/products/{categoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Object> getProductsByCategoryId(@PathVariable(value = "categoryId") Long categoryId) {
+        return ResponseHandler.success(productServiceImpl.getProductsByCategory(categoryId), "Products in Category", HttpStatus.OK);
+    }
+
+
 
 }
