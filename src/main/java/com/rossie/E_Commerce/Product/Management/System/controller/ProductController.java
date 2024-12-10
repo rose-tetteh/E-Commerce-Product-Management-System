@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * The type Product controller.
  */
 @RestController
-@RequestMapping(path = "/api/")
+@RequestMapping(path = "/api/v1/")
 public class ProductController {
     private final ProductServiceImpl productServiceImpl;
 
@@ -30,7 +30,7 @@ public class ProductController {
      *
      * @return the all products
      */
-    @GetMapping("v1/products")
+    @GetMapping("products")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getAllProducts() {
         return ResponseHandler.success(productServiceImpl.getAll(), "All Products", HttpStatus.OK);
@@ -42,7 +42,7 @@ public class ProductController {
      * @param productDto the product dto
      * @return the response entity
      */
-    @PostMapping("v1/addProduct")
+    @PostMapping("addProduct")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> addProduct(@RequestBody ProductDto productDto) {
         return ResponseHandler.success(productServiceImpl.add(productDto), "Product Added", HttpStatus.CREATED);
@@ -54,7 +54,7 @@ public class ProductController {
      * @param productId the product id
      * @return the product by id
      */
-    @GetMapping("v1/products/{productId}")
+    @GetMapping("products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getProductById(@PathVariable(value = "productId") Long productId) {
         return ResponseHandler.success(productServiceImpl.getById(productId), "Product Found", HttpStatus.OK);
@@ -66,7 +66,7 @@ public class ProductController {
      * @param productName the product name
      * @return the product by name
      */
-    @GetMapping("v1/products/{productName}")
+    @GetMapping("products/{productName}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getProductByName(@PathVariable(value = "productName") String productName) {
         return ResponseHandler.success(productServiceImpl.getByName(productName), "Product Found", HttpStatus.OK);
@@ -78,7 +78,7 @@ public class ProductController {
      * @param productId the product id
      * @return the response entity
      */
-    @DeleteMapping("v1/product/{productId}")
+    @DeleteMapping("product/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "productId") Long productId) {
         return ResponseHandler.success(productServiceImpl.deleteById(productId), "Product Deleted", HttpStatus.OK);
@@ -91,7 +91,7 @@ public class ProductController {
      * @param productDto the product dto
      * @return the response entity
      */
-    @PutMapping("v1/project/{productId}")
+    @PutMapping("product/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> updateProduct(@PathVariable("productId") Long productId,@RequestBody ProductDto productDto) {
         return ResponseHandler.success(productServiceImpl.updateById(productId, productDto), "Product Updated", HttpStatus.OK);

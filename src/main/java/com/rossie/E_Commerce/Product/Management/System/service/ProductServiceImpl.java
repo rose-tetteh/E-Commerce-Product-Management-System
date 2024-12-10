@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * The type Product service.
@@ -70,7 +70,7 @@ public class ProductServiceImpl implements ProductService,GenericService<Product
                 .productDescription(productDto.productDescription())
                 .productPrice(productDto.productPrice())
                 .productStock(productDto.productStock())
-                .createAt(LocalDateTime.from(Instant.now()))
+                .createAt(LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()))
                 .build();
         productRepository.save(product);
         return objectMapper.convertValue(product, ProductResponseDto.class);
